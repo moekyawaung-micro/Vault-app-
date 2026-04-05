@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault - Photo & Video Vault - ဗော်လ်ဖိုင်</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Padauk', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* ============== HEADER ============== */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            animation: slideInDown 0.6s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-content h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .header-content p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .lang-btn {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* ============== MAIN GRID ============== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* ============== TOOLBAR ============== */
+        .toolbar {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .view-btn {
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .view-btn.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 0 15px;
+            gap: 10px;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            padding: 10px 0;
+            outline: none;
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* ============== UPLOAD AREA ============== */
+        .upload-area {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 3px dashed #667eea;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-area.drag-over {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        /* ============== GALLERY ============== */
+        .gallery {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f0f0f0;
+            aspect-ratio: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-item.selected {
+            box-shadow: 0 0 0 3px #667eea;
+        }
+
+        .gallery-img,
+        .gallery-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .overlay-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #667eea;
+            transition: all 0.3s;
+        }
+
+        .overlay-btn:hover {
+            transform: scale(1.1);
+            background: #667eea;
+            color: white;
+        }
+
+        .gallery-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .gallery-badge.photo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .gallery-badge.video {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .gallery-size {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .gallery-date {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .video-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .gallery-item:hover .video-play {
+            opacity: 1;
+        }
+
+        /* ============== EMPTY STATE ============== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        /* ============== SIDEBAR ============== */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: fit-content;
+        }
+
+        .sidebar-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .folder-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .folder-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .folder-item:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .folder-item.active {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .folder-icon {
+            font-size: 18px;
+            color: #f39c12;
+        }
+
+        .folder-name {
+            flex: 1;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .folder-count {
+            font-size: 12px;
+            color: #888;
+            background: #e8e8e8;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .storage-bar {
+            margin-top: 20px;
+        }
+
+        .storage-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .storage-progress {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .storage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        /* ============== MODAL ============== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #f9f9f9;
+        }
+
+        .viewer-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .viewer-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+            transition: all 0.3s;
+        }
+
+        .viewer-close:hover {
+            color: #333;
+            transform: rotate(90deg);
+        }
+
+        .viewer-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .viewer-img,
+        .viewer-video {
+            max-width: 100%;
+            max-height: 60vh;
+            border-radius: 10px;
+        }
+
+        .viewer-info {
+            margin-top: 20px;
+            text-align: left;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: #666;
+        }
+
+        .info-value {
+            color: #333;
+            word-break: break-all;
+        }
+
+        .viewer-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ============== ALERTS ============== */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert.success {
+            border-left: 4px solid #27ae60;
+        }
+
+        .alert.success .alert-icon {
+            color: #27ae60;
+        }
+
+        .alert.error {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .alert.error .alert-icon {
+            color: #e74c3c;
+        }
+
+        .alert-icon {
+            font-size: 18px;
+        }
+
+        /* ============== CONTEXT MENU ============== */
+        .context-menu {
+            position: fixed;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: none;
+            min-width: 180px;
+        }
+
+        .context-menu.show {
+            display: block;
+        }
+
+        .context-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #333;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .context-item:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .context-item:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .context-item:hover {
+            background: #f0f0f0;
+        }
+
+        .context-item.danger {
+            color: #e74c3c;
+        }
+
+        .context-item.danger:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        /* ============== RESPONSIVE ============== */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-stats {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filter-controls {
+                width: 100%;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+
+            .modal-content {
+                max-width: 95%;
+                border-radius: 15px;
+            }
+
+            .viewer-img,
+            .viewer-video {
+                max-height: 50vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header-content h1 {
+                font-size: 24px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+
+            .toolbar {
+                padding: 15px;
+            }
+
+            .upload-area {
+                padding: 30px 20px;
+            }
+
+            .gallery {
+                padding: 20px;
+            }
+
+            .modal-content {
+                border-radius: 15px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .selection-mode-active {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .bulk-actions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 10px;
+            z-index: 999;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 30px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .bulk-actions.hide {
+            display: none;
+        }
+
+        .selection-count {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 15px;
+            border-right: 1px solid #e0e0e0;
+            font-weight: 700;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1 id="appTitle">🔐 Vault</h1>
+            <p id="appSubtitle">Secure Photo & Video Storage</p>
+        </div>
+        <div class="header-stats">
+            <div class="stat-item">
+                <div class="stat-value" id="photoCount">0</div>
+                <div class="stat-label" id="photoLabel">Photos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="videoCount">0</div>
+                <div class="stat-label" id="videoLabel">Videos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label" id="totalLabel">Total</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="lang-btn active" onclick="setLanguage('en')" id="enBtn">EN</button>
+            <button class="lang-btn" onclick="setLanguage('my')" id="myBtn">MY</button>
+            <button class="btn btn-secondary btn-sm" onclick="toggleSelectionMode()">
+                <i class="fas fa-check-square"></i>
+                <span id="selectBtn">Select</span>
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="document.getElementById('uploadInput').click()">
+                <i class="fas fa-upload"></i>
+                <span id="uploadBtn">Upload</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-grid">
+            <!-- Main Content -->
+            <div>
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <div class="view-toggle">
+                            <button class="view-btn active" onclick="setViewMode('grid')" title="Grid View">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" onclick="setViewMode('list')" title="List View">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        <div class="search-box">
+                            <i class="fas fa-search" style="color: #888;"></i>
+                            <input type="text" id="searchInput" placeholder="Search files..." onkeyup="searchFiles()">
+                        </div>
+                    </div>
+                    <div class="filter-controls">
+                        <button class="filter-btn active" onclick="filterFiles('all')" id="filterAll">All</button>
+                        <button class="filter-btn" onclick="filterFiles('photos')" id="filterPhotos">Photos</button>
+                        <button class="filter-btn" onclick="filterFiles('videos')" id="filterVideos">Videos</button>
+                    </div>
+                </div>
+
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="document.getElementById('uploadInput').click()">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text" id="uploadText">Upload Photos & Videos</div>
+                    <div class="upload-subtext" id="uploadSubtext">Drag and drop or click to select files</div>
+                </div>
+
+                <!-- Gallery -->
+                <div class="gallery">
+                    <div class="gallery-grid" id="gallery"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Folders -->
+                <div class="sidebar-panel">
+                    <div class="panel-title">
+                        <i class="fas fa-folder"></i>
+                        <span id="foldersTitle">Folders</span>
+                    </div>
+                    <div id="foldersList"></div>
+                </div>
+
+                <!-- Storage Info -->
+                <div class="sidebar-panel">
+                    <div class="panel-title">
+                        <i class="fas fa-database"></i>
+                        <span id="storageTitle">Storage</span>
+                    </div>
+                    <div class="storage-bar">
+                        <div class="storage-label">
+                            <span id="usedLabel">Used</span>
+                            <span id="storageUsed">0 MB</span>
+                        </div>
+                        <div class="storage-progress">
+                            <div class="storage-fill" id="storageFill" style="width: 0%"></div>
+                        </div>
+                        <div class="storage-label" style="margin-top: 8px;">
+                            <span id="totalStorageLabel">Total</span>
+                            <span id="totalStorage">500 MB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="sidebar-panel">
+                    <div class="panel-title">
+                        <i class="fas fa-chart-pie"></i>
+                        <span id="statsTitle">Statistics</span>
+                    </div>
+                    <div style="font-size: 12px; color: #666;">
+                        <div style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;">
+                            <strong id="recentFilesLabel">Recent</strong>
+                            <div style="font-size: 14px; color: #667eea; font-weight: 700;" id="recentCount">0</div>
+                        </div>
+                        <div style="padding: 8px 0;">
+                            <strong id="favoriteLabel">Favorites</strong>
+                            <div style="font-size: 14px; color: #667eea; font-weight: 700;" id="favoriteCount">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Viewer Modal -->
+    <div class="modal" id="viewerModal">
+        <div class="modal-content">
+            <div class="viewer-header">
+                <div class="viewer-title" id="viewerTitle"></div>
+                <button class="viewer-close" onclick="closeViewer()">&times;</button>
+            </div>
+            <div class="viewer-body">
+                <img id="viewerImg" class="viewer-img" style="display: none;">
+                <video id="viewerVideo" class="viewer-video" controls style="display: none;"></video>
+                <div class="viewer-info">
+                    <div class="info-row">
+                        <span class="info-label" id="nameLabel">Name:</span>
+                        <span class="info-value" id="infoName"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label" id="typeLabel">Type:</span>
+                        <span class="info-value" id="infoType"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label" id="sizeLabel">Size:</span>
+                        <span class="info-value" id="infoSize"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label" id="dateLabel">Date:</span>
+                        <span class="info-value" id="infoDate"></span>
+                    </div>
+                    <div class="info-row" id="dimensionRow">
+                        <span class="info-label" id="dimensionLabel">Dimensions:</span>
+                        <span class="info-value" id="infoDimension"></span>
+                    </div>
+                </div>
+                <div class="viewer-actions">
+                    <button class="btn btn-primary btn-sm" onclick="downloadFile()">
+                        <i class="fas fa-download"></i>
+                        <span id="downloadBtn">Download</span>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="toggleFavorite()">
+                        <i class="fas fa-heart"></i>
+                        <span id="favoriteBtn">Add to Favorites</span>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="deleteCurrentFile()">
+                        <i class="fas fa-trash"></i>
+                        <span id="deleteBtn">Delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <button class="context-item" onclick="viewFile()">
+            <i class="fas fa-eye"></i>
+            <span id="contextView">View</span>
+        </button>
+        <button class="context-item" onclick="toggleFavoriteFromContext()">
+            <i class="fas fa-heart"></i>
+            <span id="contextFavorite">Add to Favorites</span>
+        </button>
+        <button class="context-item" onclick="downloadFile()">
+            <i class="fas fa-download"></i>
+            <span id="contextDownload">Download</span>
+        </button>
+        <button class="context-item" onclick="renameFile()">
+            <i class="fas fa-edit"></i>
+            <span id="contextRename">Rename</span>
+        </button>
+        <button class="context-item danger" onclick="deleteCurrentFile()">
+            <i class="fas fa-trash"></i>
+            <span id="contextDelete">Delete</span>
+        </button>
+    </div>
+
+    <!-- Hidden Input -->
+    <input type="file" id="uploadInput" class="upload-input" multiple accept="image/*,video/*" onchange="handleFileSelect(event)">
+
+    <script>
+        // ============== TRANSLATIONS ==============
+        const translations = {
+            en: {
+                appTitle: '🔐 Vault',
+                appSubtitle: 'Secure Photo & Video Storage',
+                photoLabel: 'Photos',
+                videoLabel: 'Videos',
+                totalLabel: 'Total',
+                selectBtn: 'Select',
+                uploadBtn: 'Upload',
+                uploadText: 'Upload Photos & Videos',
+                uploadSubtext: 'Drag and drop or click to select files',
+                foldersTitle: 'Folders',
+                storageTitle: 'Storage',
+                usedLabel: 'Used',
+                totalStorageLabel: 'Total',
+                statsTitle: 'Statistics',
+                recentFilesLabel: 'Recent',
+                favoriteLabel: 'Favorites',
+                filterAll: 'All',
+                filterPhotos: 'Photos',
+                filterVideos: 'Videos',
+                nameLabel: 'Name:',
+                typeLabel: 'Type:',
+                sizeLabel: 'Size:',
+                dateLabel: 'Date:',
+                dimensionLabel: 'Dimensions:',
+                downloadBtn: 'Download',
+                favoriteBtn: 'Add to Favorites',
+                deleteBtn: 'Delete',
+                contextView: 'View',
+                contextFavorite: 'Add to Favorites',
+                contextDownload: 'Download',
+                contextRename: 'Rename',
+                contextDelete: 'Delete',
+                successUpload: 'Files uploaded successfully!',
+                successDelete: 'File deleted successfully!',
+                errorUpload: 'Error uploading file!',
+                confirmDelete: 'Are you sure you want to delete this file?',
+                noFiles: 'No files found. Start by uploading photos or videos.',
+                allFolders: 'All Files',
+                recentFolder: 'Recent',
+                favoritesFolder: 'Favorites',
+                photo: 'Photo',
+                video: 'Video',
+                removedFromFavorites: 'Removed from favorites',
+                addedToFavorites: 'Added to favorites'
+            },
+            my: {
+                appTitle: '🔐 ဗော်လ်ဖိုင်',
+                appSubtitle: 'လုံခြုံသောဓမ္မတ & ဗီဒီယိုသိုင်းဆည်းခြင်း',
+                photoLabel: 'ဓမ္မတ',
+                videoLabel: 'ဗီဒီယို',
+                totalLabel: 'စုစုပေါင်း',
+                selectBtn: 'ရွေးချယ်ရန်',
+                uploadBtn: 'အပ်လုပ်ဒ်လုပ်ရန်',
+                uploadText: 'ဓမ္မတ & ဗီဒီယိုအပ်လုပ်ဒ်',
+                uploadSubtext: 'ဆွဲထည့်သွင်းရန်သို့မဟုတ်ကလစ်နှိပ်ပါ',
+                foldersTitle: 'ဖိုင်လ်အုပ်စုများ',
+                storageTitle: 'သိုင်းဆည်းခြင်း',
+                usedLabel: 'အသုံးပြုသည်',
+                totalStorageLabel: 'စုစုပေါင်း',
+                statsTitle: 'စာရင်းအင်း',
+                recentFilesLabel: 'လတ်တလော',
+                favoriteLabel: 'အကြိုက်ဆုံး',
+                filterAll: 'အားလုံး',
+                filterPhotos: 'ဓမ္မတများ',
+                filterVideos: 'ဗီဒီယိုများ',
+                nameLabel: 'အမည်:',
+                typeLabel: 'အမျိုးအစား:',
+                sizeLabel: 'အရွယ်အစား:',
+                dateLabel: 'နေ့စွဲ:',
+                dimensionLabel: 'အတိုင်းအတာ:',
+                downloadBtn: 'ဒေါင်းလုပ်ဒ်',
+                favoriteBtn: 'အကြိုက်ဆုံးသို့ထည့်သွင်း',
+                deleteBtn: 'ဖျက်ရန်',
+                contextView: 'ကြည့်ရှုရန်',
+                contextFavorite: 'အကြိုက်ဆုံးသို့ထည့်သွင်း',
+                contextDownload: 'ဒေါင်းလုပ်ဒ်',
+                contextRename: 'အမည်ပြောင်းလဲ',
+                contextDelete: 'ဖျက်ရန်',
+                successUpload: 'ဖိုင်များအောင်မြင်စွာအပ်လုပ်ဒ်လုပ်ပြီးပါ!',
+                successDelete: 'ဖိုင်အောင်မြင်စွာဖျက်ပြီးပါ!',
+                errorUpload: 'ဖိုင်အပ်လုပ်ဒ်အတွင်းအမှားအယွင်း!',
+                confirmDelete: 'ဤဖိုင်ကိုဖျက်ရန်သေချာပါသလား?',
+                noFiles: 'ဖိုင်မရှိသေးပါ။ ဓမ္မတ သို့မဟုတ် ဗီဒီယိုအပ်လုပ်ဒ်ကိုစတင်ပါ။',
+                allFolders: 'ဖိုင်အားလုံး',
+                recentFolder: 'လတ်တလော',
+                favoritesFolder: 'အကြိုက်ဆုံး',
+                photo: 'ဓမ္မတ',
+                video: 'ဗီဒီယို',
+                removedFromFavorites: 'အကြိုက်ဆုံးမှအဖြုတ်ပြီး',
+                addedToFavorites: 'အကြိုက်ဆုံးသို့ထည့်သွင်းပြီး'
+            }
+        };
+
+        // ============== STATE ==============
+        let currentLanguage = 'en';
+        let files = JSON.parse(localStorage.getItem('vaultFiles')) || [];
+        let currentFilter = 'all';
+        let currentViewMode = 'grid';
+        let selectionMode = false;
+        let selectedFiles = new Set();
+        let currentViewingFile = null;
+        let contextMenuFile = null;
+        const MAX_STORAGE = 500 * 1024 * 1024; // 500 MB
+
+        // ============== INITIALIZATION ==============
+        function init() {
+            updateLanguage();
+            renderGallery();
+            updateStats();
+            updateFolders();
+            updateStorage();
+        }
+
+        // ============== LANGUAGE ==============
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(lang === 'en' ? 'enBtn' : 'myBtn').classList.add('active');
+            updateLanguage();
+        }
+
+        function t(key) {
+            return translations[currentLanguage][key] || key;
+        }
+
+        function updateLanguage() {
+            document.getElementById('appTitle').textContent = t('appTitle');
+            document.getElementById('appSubtitle').textContent = t('appSubtitle');
+            document.getElementById('photoLabel').textContent = t('photoLabel');
+            document.getElementById('videoLabel').textContent = t('videoLabel');
+            document.getElementById('totalLabel').textContent = t('totalLabel');
+            document.getElementById('selectBtn').textContent = t('selectBtn');
+            document.getElementById('uploadBtn').textContent = t('uploadBtn');
+            document.getElementById('uploadText').textContent = t('uploadText');
+            document.getElementById('uploadSubtext').textContent = t('uploadSubtext');
+            document.getElementById('foldersTitle').textContent = t('foldersTitle');
+            document.getElementById('storageTitle').textContent = t('storageTitle');
+            document.getElementById('usedLabel').textContent = t('usedLabel');
+            document.getElementById('totalStorageLabel').textContent = t('totalStorageLabel');
+            document.getElementById('statsTitle').textContent = t('statsTitle');
+            document.getElementById('recentFilesLabel').textContent = t('recentFilesLabel');
+            document.getElementById('favoriteLabel').textContent = t('favoriteLabel');
+            document.getElementById('filterAll').textContent = t('filterAll');
+            document.getElementById('filterPhotos').textContent = t('filterPhotos');
+            document.getElementById('filterVideos').textContent = t('filterVideos');
+            document.getElementById('nameLabel').textContent = t('nameLabel');
+            document.getElementById('typeLabel').textContent = t('typeLabel');
+            document.getElementById('sizeLabel').textContent = t('sizeLabel');
+            document.getElementById('dateLabel').textContent = t('dateLabel');
+            document.getElementById('dimensionLabel').textContent = t('dimensionLabel');
+            document.getElementById('downloadBtn').textContent = t('downloadBtn');
+            document.getElementById('favoriteBtn').textContent = t('favoriteBtn');
+            document.getElementById('deleteBtn').textContent = t('deleteBtn');
+            document.getElementById('contextView').textContent = t('contextView');
+            document.getElementById('contextFavorite').textContent = t('contextFavorite');
+            document.getElementById('contextDownload').textContent = t('contextDownload');
+            document.getElementById('contextRename').textContent = t('contextRename');
+            document.getElementById('contextDelete').textContent = t('contextDelete');
+            renderGallery();
+            updateFolders();
+        }
+
+        // ============== FILE UPLOAD ==============
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.remove('drag-over');
+
+            const files = e.dataTransfer.files;
+            handleFileSelect({ target: { files } });
+        }
+
+        function handleFileSelect(event) {
+            const uploadedFiles = Array.from(event.target.files);
+
+            uploadedFiles.forEach(file => {
+                if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const type = file.type.startsWith('image/') ? 'photo' : 'video';
+                        const newFile = {
+                            id: Date.now() + Math.random(),
+                            name: file.name,
+                            type: type,
+                            size: file.size,
+                            date: new Date().toISOString(),
+                            data: e.target.result,
+                            favorite: false,
+                            folder: 'All Files'
+                        };
+
+                        // Get dimensions for images
+                        if (type === 'photo') {
+                            const img = new Image();
+                            img.onload = () => {
+                                newFile.width = img.width;
+                                newFile.height = img.height;
+                                files.unshift(newFile);
+                                localStorage.setItem('vaultFiles', JSON.stringify(files));
+                                renderGallery();
+                                updateStats();
+                                updateStorage();
+                            };
+                            img.src = e.target.result;
+                        } else {
+                            files.unshift(newFile);
+                            localStorage.setItem('vaultFiles', JSON.stringify(files));
+                            renderGallery();
+                            updateStats();
+                            updateStorage();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            showAlert(t('successUpload'), 'success');
+            event.target.value = '';
+        }
+
+        // ============== GALLERY ==============
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            let filteredFiles = files;
+
+            // Apply filter
+            if (currentFilter === 'photos') {
+                filteredFiles = filteredFiles.filter(f => f.type === 'photo');
+            } else if (currentFilter === 'videos') {
+                filteredFiles = filteredFiles.filter(f => f.type === 'video');
+            }
+
+            // Apply search
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filteredFiles = filteredFiles.filter(f => f.name.toLowerCase().includes(searchTerm));
+            }
+
+            if (filteredFiles.length === 0) {
+                gallery.innerHTML = `
+                    <div style="grid-column: 1/-1;">
+                        <div class="empty-state">
+                            <div class="empty-icon">📁</div>
+                            <div class="empty-text">${t('noFiles')}</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            gallery.innerHTML = filteredFiles.map(file => `
+                <div class="gallery-item ${selectedFiles.has(file.id) ? 'selected' : ''}" 
+                     onclick="handleItemClick(event, '${file.id}')"
+                     oncontextmenu="handleContextMenu(event, '${file.id}')">
+                    ${file.type === 'photo' ? 
+                        `<img src="${file.data}" class="gallery-img" alt="${file.name}">` :
+                        `<video class="gallery-video" src="${file.data}"></video><div class="video-play"><i class="fas fa-play-circle"></i></div>`
+                    }
+                    <div class="gallery-badge ${file.type}">${file.type.toUpperCase()}</div>
+                    <div class="gallery-size">${formatFileSize(file.size)}</div>
+                    <div class="gallery-date">${new Date(file.date).toLocaleDateString()}</div>
+                    <div class="gallery-overlay">
+                        <button class="overlay-btn" onclick="viewFile('${file.id}', event)" title="View">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="overlay-btn" onclick="toggleFavorite('${file.id}', event)" title="Favorite">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleItemClick(e, fileId) {
+            if (selectionMode && !e.target.closest('.overlay-btn')) {
+                e.stopPropagation();
+                toggleSelection(fileId);
+            }
+        }
+
+        function handleContextMenu(e, fileId) {
+            e.preventDefault();
+            contextMenuFile = fileId;
+            const menu = document.getElementById('contextMenu');
+            menu.classList.add('show');
+            menu.style.top = e.pageY + 'px';
+            menu.style.left = e.pageX + 'px';
+        }
+
+        // ============== FILE OPERATIONS ==============
+        function viewFile(fileId = null, e = null) {
+            if (e) e.stopPropagation();
+            
+            const fileId_ = fileId || contextMenuFile;
+            const file = files.find(f => f.id == fileId_);
+            if (!file) return;
+
+            currentViewingFile = file;
+            document.getElementById('viewerTitle').textContent = file.name;
+            document.getElementById('infoName').textContent = file.name;
+            document.getElementById('infoType').textContent = file.type === 'photo' ? t('photo') : t('video');
+            document.getElementById('infoSize').textContent = formatFileSize(file.size);
+            document.getElementById('infoDate').textContent = new Date(file.date).toLocaleString();
+
+            if (file.type === 'photo') {
+                document.getElementById('viewerImg').src = file.data;
+                document.getElementById('viewerImg').style.display = 'block';
+                document.getElementById('viewerVideo').style.display = 'none';
+                document.getElementById('dimensionRow').style.display = 'flex';
+                document.getElementById('infoDimension').textContent = `${file.width}x${file.height}px`;
+            } else {
+                document.getElementById('viewerVideo').src = file.data;
+                document.getElementById('viewerVideo').style.display = 'block';
+                document.getElementById('viewerImg').style.display = 'none';
+                document.getElementById('dimensionRow').style.display = 'none';
+            }
+
+            updateFavoriteButton();
+            document.getElementById('viewerModal').classList.add('show');
+            document.getElementById('contextMenu').classList.remove('show');
+        }
+
+        function closeViewer() {
+            document.getElementById('viewerModal').classList.remove('show');
+            currentViewingFile = null;
+        }
+
+        function downloadFile(fileId = null) {
+            const file = fileId ? files.find(f => f.id == fileId) : currentViewingFile;
+            if (!file) return;
+
+            const link = document.createElement('a');
+            link.href = file.data;
+            link.download = file.name;
+            link.click();
+        }
+
+        function toggleFavorite(fileId = null, e = null) {
+            if (e) e.stopPropagation();
+            
+            const fileId_ = fileId || contextMenuFile;
+            const file = files.find(f => f.id == fileId_);
+            if (!file) return;
+
+            file.favorite = !file.favorite;
+            localStorage.setItem('vaultFiles', JSON.stringify(files));
+            
+            if (currentViewingFile && currentViewingFile.id === file.id) {
+                updateFavoriteButton();
+            }
+
+            showAlert(file.favorite ? t('addedToFavorites') : t('removedFromFavorites'), 'success');
+            renderGallery();
+            updateStats();
+        }
+
+        function toggleFavoriteFromContext() {
+            toggleFavorite(contextMenuFile);
+            document.getElementById('contextMenu').classList.remove('show');
+        }
+
+        function deleteCurrentFile(fileId = null) {
+            const fileId_ = fileId || contextMenuFile;
+            if (!fileId_ && currentViewingFile) {
+                fileId_ = currentViewingFile.id;
+            }
+
+            if (!fileId_) return;
+
+            if (confirm(t('confirmDelete'))) {
+                files = files.filter(f => f.id != fileId_);
+                localStorage.setItem('vaultFiles', JSON.stringify(files));
+                showAlert(t('successDelete'), 'success');
+                
+                if (currentViewingFile && currentViewingFile.id == fileId_) {
+                    closeViewer();
+                }
+                
+                renderGallery();
+                updateStats();
+                updateStorage();
+            }
+            
+            document.getElementById('contextMenu').classList.remove('show');
+        }
+
+        function renameFile() {
+            const file = files.find(f => f.id == contextMenuFile);
+            if (!file) return;
+
+            const newName = prompt('Enter new name:', file.name);
+            if (newName && newName.trim()) {
+                file.name = newName.trim();
+                localStorage.setItem('vaultFiles', JSON.stringify(files));
+                renderGallery();
+            }
+
+            document.getElementById('contextMenu').classList.remove('show');
+        }
+
+        // ============== SELECTION MODE ==============
+        function toggleSelectionMode() {
+            selectionMode = !selectionMode;
+            selectedFiles.clear();
+            document.getElementById('gallery').classList.toggle('selection-mode-active');
+            renderGallery();
+        }
+
+        function toggleSelection(fileId) {
+            if (selectedFiles.has(fileId)) {
+                selectedFiles.delete(fileId);
+            } else {
+                selectedFiles.add(fileId);
+            }
+            renderGallery();
+        }
+
+        // ============== FILTERS ==============
+        function filterFiles(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderGallery();
+        }
+
+        function searchFiles() {
+            renderGallery();
+        }
+
+        // ============== VIEW MODES ==============
+        function setViewMode(mode) {
+            currentViewMode = mode;
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.view-btn').classList.add('active');
+            // Could implement list view here
+        }
+
+        // ============== FOLDERS ==============
+        function updateFolders() {
+            const foldersList = document.getElementById('foldersList');
+            
+            const folders = [
+                { name: t('allFolders'), icon: 'fa-folder', id: 'all', count: files.length },
+                { name: t('recentFolder'), icon: 'fa-clock', id: 'recent', count: files.slice(0, 10).length },
+                { name: t('favoritesFolder'), icon: 'fa-star', id: 'favorites', count: files.filter(f => f.favorite).length }
+            ];
+
+            foldersList.innerHTML = folders.map(folder => `
+                <div class="folder-item" onclick="filterByFolder('${folder.id}')">
+                    <div class="folder-icon"><i class="fas ${folder.icon}"></i></div>
+                    <div class="folder-name">${folder.name}</div>
+                    <div class="folder-count">${folder.count}</div>
+                </div>
+            `).join('');
+        }
+
+        function filterByFolder(folderType) {
+            currentFilter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('filterAll').classList.add('active');
+            renderGallery();
+        }
+
+        // ============== STATISTICS ==============
+        function updateStats() {
+            const photos = files.filter(f => f.type === 'photo').length;
+            const videos = files.filter(f => f.type === 'video').length;
+            const total = files.length;
+            const favorites = files.filter(f => f.favorite).length;
+            const recent = Math.min(files.length, 10);
+
+            document.getElementById('photoCount').textContent = photos;
+            document.getElementById('videoCount').textContent = videos;
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('favoriteCount').textContent = favorites;
+            document.getElementById('recentCount').textContent = recent;
+        }
+
+        // ============== STORAGE ==============
+        function updateStorage() {
+            const totalSize = files.reduce((sum, f) => sum + f.size, 0);
+            const percentage = (totalSize / MAX_STORAGE) * 100;
+
+            document.getElementById('storageUsed').textContent = formatFileSize(totalSize);
+            document.getElementById('storageFill').style.width = Math.min(percentage, 100) + '%';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function updateFavoriteButton() {
+            if (!currentViewingFile) return;
+            const btn = document.getElementById('favoriteBtn');
+            if (currentViewingFile.favorite) {
+                btn.innerHTML = '<i class="fas fa-heart"></i><span>Remove from Favorites</span>';
+                btn.style.color = '#e74c3c';
+            } else {
+                btn.innerHTML = '<i class="fas fa-heart"></i><span>' + t('favoriteBtn') + '</span>';
+                btn.style.color = '';
+            }
+        }
+
+        // ============== ALERTS ==============
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.innerHTML = `
+                <span class="alert-icon">${type === 'success' ? '✓' : '!'}</span>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        // ============== INITIALIZATION ==============
+        window.addEventListener('load', init);
+
+        // Close context menu on click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.context-menu') && !e.target.closest('.gallery-item')) {
+                document.getElementById('contextMenu').classList.remove('show');
+            }
+        });
+
+        // Close viewer on outside click
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('viewerModal');
+            if (e.target === modal) {
+                closeViewer();
+            }
+        });
+    </script>
+</body>
+</html>
+```
+
